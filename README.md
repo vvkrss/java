@@ -44,8 +44,8 @@ public class Homework1 {
 
     // task 3
     static int max(int x, int y, int z) {
-        int maxim = Math.max(x, Math.max(y, z));
-        return maxim;
+        int maximum = Math.max(x, Math.max(y, z));
+        return maximum;
     }
 
 
@@ -87,12 +87,11 @@ public class Homework1 {
 
     // task 7
     static int average(int... nums) {
-        int summ = 0;
+        int sum = 0;
         for (int i = 0; i < nums.length; i++){
-            summ += nums[i];
+            sum += nums[i];
         }
-        int art = summ / nums.length;
-        return art;
+        return sum / nums.length;
 
     }
 
@@ -100,7 +99,10 @@ public class Homework1 {
     // task 8
     static boolean isMagicSquare(int[][] square) {
         boolean flag = true;
-        int equal = 0, diag = 0, current_1, current_2;
+        int equal = 0; 
+        int diag = 0; 
+        int firstCurrent; 
+        int secondCurrent;
 
         for (int i = 0; i < square[0].length; ++i) {
             equal += square[i][i];
@@ -108,13 +110,13 @@ public class Homework1 {
         }
 
         for (int i = 0; i < square.length; ++i) {
-            current_1 = 0;
-            current_2 = 0;
+            firstCurrent = 0;
+            secondCurrent = 0;
             for (int j = 0; j < square[0].length; ++j) {
-                current_1 += square[i][j];
-                current_2 += square[j][i];
+                firstCurrent += square[i][j];
+                secondCurrent += square[j][i];
             }
-            if (current_1 != equal || current_2 != equal) {
+            if (firstCurrent != equal || secondCurrent != equal) {
                 flag = false;
                 break;
             }
