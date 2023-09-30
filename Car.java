@@ -5,98 +5,78 @@ public class Car {
     private final String model;
     private final Engine engine;
     private int mileage;
-
-    public Car(String colour, int maxFuel, String model, int consumption) {
+    public Car(String colour, int maxFuel, String model) {
         this.colour = colour;
         this.maxFuel = maxFuel;
         this.model = model;
-        this.engine = new Engine(consumption);
-        this.fuel = maxFuel;
-        this.mileage = 0;
+        this.engine = new Engine();
     }
-
-    private class Engine {
-        private boolean isRunning;
-        private final int consumption;
-
-        public Engine(int consumption) {
-            this.isRunning = false;
-            this.consumption = consumption;
+    public void startEng() {
+        if (fuel <= 0) {
+            System.out.println("No fuel. Refuel please");
+            return;
         }
-
-        public void start() {
-            if (fuel > 0) {
-                isRunning = true;
-                System.out.println("Engine started.");
-            } else {
-                System.out.println("Cannot start the engine. The fuel tank is empty.");
-            }
-        }
-
-        public void stop() {
-            isRunning = false;
-            System.out.println("Engine stopped.");
-        }
-
-        public boolean move() {
-            if (isRunning) {
-                if (fuel >= consumption) {
-                    fuel -= consumption;
-                    mileage += 100;
-                    return true;
-                } else {
-                    stop();
-                    System.out.println("Fuel is out. Refuel the car.");
-                    return false;
-                }
-            }
-            return false;
-        }
+        engine.turnon();
+        System.out.println("Engine is running");
     }
-
+    public void stopEng() {
+        engine.turnoff();
+        System.out.println("Engine is off");
+    }
     public void refuel() {
-        fuel = maxFuel;
-        System.out.println("Car is refueled to maximum.");
+        refuel(maxFuel - fuel);
     }
-
     public void refuel(int amount) {
+        if (amount <= 0) {
+            System.out.println("No fuel");
+            return;
+        }
         fuel = Math.min(fuel + amount, maxFuel);
-        System.out.println("Car is refueled with " + amount + " liters.");
+        System.out.println("Car is refueled, fuel level: " + fuel);
     }
+    public void drive(int distance) {
+        if (!engine.isOn()) {
+            System.out.println("Start engine");
+            return;
+        }
+        double maxDistance = fuel / engine.getFuelConsumption();
+        if (distance > maxDistance) {
+            System.out.println("Refuel");
+            return;
+        }
 
-    public void startEngine() {
-        engine.start();
+        fuel -= distance * engine.getFuelConsumption();
+        mileage += distance;
+        System.out.println("Car passed " + distance + " km Mileage: " + mileage + " km.");
     }
-
-    public void stopEngine() {
-        engine.stop();
-    }
-
-    public void move() {
-        while (engine.move()) { }
-    }
-
     public void info() {
-        System.out.println("Model: " + model);
+        System.out.println("info:");
         System.out.println("Colour: " + colour);
-        System.out.println("Fuel left: " + fuel);
-        System.out.println("Mileage: " + mileage);
-        System.out.println("Engine is " + (engine.isRunning ? "running" : "stopped"));
+        System.out.println("Fuel level: " + fuel);
+        System.out.println("MaxFuel Level: " + maxFuel);
+        System.out.println("Model: " + model);
+        System.out.println("Mileage: " + mileage + " км");
+        System.out.println("Engine status: " + (engine.isOn() ? "on" : "off"));
+        System.out.println("Fuel consumption: " + engine.getFuelConsumption());
     }
-
-    public static void main(String[] args) {
-        Car car = new Car("Red", 500, "Toyota", 50);
-        car.info();
-
-        car.move();
-        car.info();
-
-        car.stopEngine();
-        car.refuel(200);
-        car.info();
-
-        car.startEngine();
-        car.move();
-        car.info();
+    private class Engine {
+        private boolean isOn;
+        private int fuelConsumption;
+        public Engine() {
+            this.isOn = false;
+            this.fuelConsumption = 40; // default fuel consumption rate
+        }
+        public void turnon() {
+            isOn = true;
+        }
+        public void turnoff() {
+            isOn = false;
+        }
+        public boolean isOn() {
+            return isOn;
+        }
+        public double getFuelConsumption() {
+            return fuelConsumption;
+        }
     }
 }
