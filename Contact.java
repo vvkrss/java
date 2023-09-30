@@ -1,37 +1,19 @@
 public record Contact(String name, String email) {
-
-    public Contact {
-        if (name == null || name.isEmpty()) {
-            throw new IllegalArgumentException("Name cannot be null or empty");
-        }
-
-        if (email == null || !isValidEmail(email)) {
-            throw new IllegalArgumentException("Email is not valid");
-        }
-    }
-
     public Contact(String name) {
-        this(name, "defaultname@gmail.com");
+        this(name, "default@gmail.com");
     }
-
-    private static boolean isValidEmail(String email) {
-        if (!email.contains("@")) {
-            return false;
+    public Contact {
+        if (name == null || email == null) {
+            throw new IllegalArgumentException("Имя пользователя и адрес электронной почты не могут быть пустыми");
         }
-
-        String domain = email.substring(email.indexOf("@"));
-        return "@gmail.com".equals(domain);
+        if (name.isEmpty()) {
+            throw new IllegalArgumentException("Имя пользователя не может быть пустым");
+        }
+        if (!email.endsWith("@gmail.com")) {
+            throw new IllegalArgumentException("Адрес электронной почты должен заканчиваться @gmail.com");
+        }
     }
-
     public void sayHello() {
-        System.out.println("Hello, " + name + "!");
-    }
-
-    public static void main(String[] args) {
-        Contact contact1 = new Contact("Alice", "alice@gmail.com");
-        contact1.sayHello();
-
-        Contact contact2 = new Contact("Bob");
-        contact2.sayHello();
+        System.out.println("Привет, " + name);
     }
 }
