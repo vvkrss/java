@@ -33,16 +33,4 @@ public class IntHolder {
     public String toString() {
         return String.valueOf(value);
     }
-    public static void main(String[] args) {
-        IntHolder v1 = IntHolder.valueOf(10);
-        IntHolder v2 = IntHolder.valueOf(5);
-        swap(v1, v2);
-        System.out.println(v1);
-        System.out.println(v2);
-        System.out.println(v1.subtract(v2));
-        System.out.println(v1.add(v2));
-        System.out.println(v1.multiply(v2));
-        System.out.println(v1.remainder(v2));
-        System.out.println(v1.divide(v2));
-    }
 }
