@@ -1,0 +1,7 @@
+public static void main(String[] args) {
+    try {
+        int a = 42 / 0;
+    } catch (ArithmeticException ex) {
+        System.out.println("Ошибка деления на ноль: " + ex.getMessage());
+    }
+}
