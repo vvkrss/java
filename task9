@@ -1,0 +1,8 @@
+public static void main(String[] args) {
+    try {
+        int[] m = new int[2];
+        m[8] = 5;
+    } catch (ArrayIndexOutOfBoundsException ex) {
+        System.out.println("Ошибка: " + ex.getMessage());
+    }
+}
