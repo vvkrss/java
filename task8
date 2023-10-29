@@ -1,0 +1,8 @@
+public static void main(String[] args) {
+    try {
+        String s = null;
+        String m = s.toLowerCase();
+    } catch (NullPointerException ex) {
+        System.out.println("Ошибка: " + ex.getMessage());
+    }
+}
