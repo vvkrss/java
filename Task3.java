@@ -1,16 +1,74 @@
-import java.util.function.BiFunction;
-import java.util.function.Function;
+class SharedArray {
+    private int[] array;
+    private boolean filled = false;
+
+    public synchronized void setArray(int[] array) {
+        while (filled) {
+            try {
+                wait();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        this.array = array;
+        filled = true;
+        notifyAll();
+    }
+
+    public synchronized int[] getArray() {
+        while (!filled) {
+            try {
+                wait();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        filled = false;
+        notifyAll();
+        return array;
+    }
+}
+
+class FillerThread implements Runnable {
+    private SharedArray sharedArray;
+
+    public FillerThread(SharedArray sharedArray) {
+        this.sharedArray = sharedArray;
+    }
+
+    @Override
+    public void run() {
+        int[] array = new int[10];
+        for (int i = 0; i < array.length; i++) {
+            array[i] = i;
+        }
+        sharedArray.setArray(array);
+    }
+}
+
+class PrinterThread implements Runnable {
+    private SharedArray sharedArray;
+
+    public PrinterThread(SharedArray sharedArray) {
+        this.sharedArray = sharedArray;
+    }
+
+    @Override
+    public void run() {
+        int[] array = sharedArray.getArray();
+        for (int i = 0; i < array.length; i++) {
+            System.out.print(array[i] + " ");
+        }
+        System.out.println();
+    }
+}
+
 public class Task3 {
-    static <A, B, C> Function<A, Function<B, C>> curry(BiFunction<A, B, C> fn) {
-        return a -> b -> fn.apply(a, b);
-    }
     public static void main(String[] args) {
-        String hello = "Hello";
-        String name = "Vova";
-        saySmth(hello, name);
-    }
-    static void saySmth(String word, String name) {
-        Function<String, Function<String, String>> greet = curry((a, b) -> a + ", " + b);
-        System.out.println(greet.apply(word).apply(name));
+        SharedArray sharedArray = new SharedArray();
+        Thread fillerThread = new Thread(new FillerThread(sharedArray));
+        Thread printerThread = new Thread(new PrinterThread(sharedArray));
+        fillerThread.start();
+        printerThread.start();
     }
 }
